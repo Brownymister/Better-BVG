@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons|Material+Icons+Outlined" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="q-app"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/quasar.umd.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/lang/de.umd.prod.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+    <script>
+        const app = Vue.createApp({
+            setup() {
+                return {}
+            }
+        })
+
+        app.use(Quasar)
+        Quasar.lang.set(Quasar.lang.de)
+        app.mount('#q-app')
+    </script>
+</body>
+
+</html>
