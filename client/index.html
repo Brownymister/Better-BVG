@@ -2,29 +2,84 @@
 <html>
 
 <head>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons|Material+Icons+Outlined" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, viewport-fit=cover">
 </head>
 
 <body>
-    <div id="q-app"></div>
+    <div id="q-app">
+        <div class="q-pa-md">
+            <div>
+                <p>Start: <b>{{ start.name }}</b></p>
+                </br>
+                <p>Ende: <b>{{ end.name }}</b>
+                </p>
+                <q-input v-model="input" label="Start"></q-input>
+                <q-btn outline color="primary" label="submit" style="margin: 1%;" @click="getLocations"></q-btn>
+                <q-btn outline color="primary" label="Route berechnen" style="margin: 1%;" @click="getJourney"></q-btn>
+                <div>
+                    <q-card v-if="locations != []" v-for="element in locations" style="margin-top: 2%;" :key="element.id" class="my-card">
+                        <q-card-section>
+                            <div class="text-h6">{{element.name}}</div>
+                            <div class="row">
+                                <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} || {{ line.mode }}&nbsp;</div>
+                            </div>
+                        </q-card-section>
+
+                        <q-separator></q-separator>
+
+                        <q-card-actions vertical>
+                            <q-btn outline color="primary" @click="showDetail(element.id)">Details</q-btn>
+                            <q-btn outline color="primary" @click="setAsStart(element)">Als Start setzten</q-btn>
+                            <q-btn outline color="primary" @click="setAsEnd(element)">Als Ende setzten</q-btn>
+                        </q-card-actions>
+                    </q-card>
+                </div>
+                <q-dialog v-model="detailDialog" full-width>
+                    <q-card>
+                        <q-card-section>
+                            <div class="text-h5">{{ stopInfo.name }}</div>
+                            <div class="row">
+                                <div v-for="line in stopInfo.lines" class="text-subtitle3">{{line.name}} || {{ line.mode }}&nbsp;</div>
+                            </div>
+                        </q-card-section>
+
+                        <q-card-section class="q-pt-none">
+                            <div class="row">
+                                <div>
+                                    <iframe v-bind:src="mapsUrl" width="400px" height="400px" frameborder="0"></iframe>
+                                </div>
+                                <div style="margin-left:2%">
+                                    <div class="text-h4">Ankünfte in den nächsten 10 Minuten:</div>
+                                    <div v-for="departure in departures" class="text-subtitle3 row">
+                                        Linie: &nbsp; <b>{{ departure.line.name }}</b>&nbsp; || &nbsp; Richtung: &nbsp;<b>{{ departure.direction }}</b> &nbsp;||&nbsp; Ankunftszeit: &nbsp;<b>{{ departure.when }}</b> &nbsp;||&nbsp;
+                                        <p style="color:red"> Verspätung: &nbsp;<b>{{ departure.delay / 60 }} &nbsp;min</b>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </q-card-section>
+
+                        <q-card-actions align="right" class="bg-white text-teal">
+                            <q-btn v-close-popup outline color="primary" @click="setAsStart(stopInfo)">Als Start setzten</q-btn>
+                            <q-btn v-close-popup outline color="primary" @click="setAsEnd(stopInfo)">Als Ende setzten</q-btn>
+                            <q-btn flat label="OK" v-close-popup></q-btn>
+                        </q-card-actions>
+                    </q-card>
+                </q-dialog>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/quasar.umd.prod.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/lang/de.umd.prod.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js "></script>
 
-
-    <script>
-        const app = Vue.createApp({
-            setup() {
-                return {}
-            }
-        })
-
-        app.use(Quasar)
-        Quasar.lang.set(Quasar.lang.de)
-        app.mount('#q-app')
+    <script src="./index.js">
     </script>
 </body>
 

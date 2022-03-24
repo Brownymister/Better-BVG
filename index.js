@@ -6,13 +6,12 @@ const path = require("path")
 const axios = require('axios').default;
 
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + "/client/index.html "))
-})
+    res.sendFile(path.join(__dirname + "/client/index.html"))
+});
 
-app.post("/api/locations/", function(req, res) {
-    var query = req.body.query;
-    var url = "https://v5.bvg.transport.rest/locations?poi=false&addresses=false&query=mehringdamm"
-})
-
+app.get('/index.js', function(req, res) {
+    res.sendFile(path.join(__dirname + "/client/index.js"))
+});
 
 app.listen(8000);
+console.log("started Server at http://192.168.0.109:8000")
