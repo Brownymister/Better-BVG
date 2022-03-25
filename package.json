@@ -10,6 +10,10 @@
     "author": "Brownymister",
     "license": "MIT",
     "dependencies": {
+        "@capacitor/android": "^3.4.3",
+        "@capacitor/cli": "^3.4.3",
+        "@capacitor/core": "^3.4.3",
+        "@capacitor/ios": "^3.4.3",
         "axios": "^0.26.1",
         "express": "^4.17.3",
         "path": "^0.12.7"

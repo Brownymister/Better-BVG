@@ -1,0 +1,6 @@
+{
+  "appId": "com.Brownymister",
+  "appName": "BVG-client",
+  "webDir": "client",
+  "bundledWebRuntime": false
+}
