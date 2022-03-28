@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
-        "compileIOS": "npx cap run ios"
+        "compileIOS": "npx cap sync"
     },
     "keywords": [],
     "author": "Brownymister",
@@ -14,6 +14,7 @@
         "@capacitor/android": "^3.4.3",
         "@capacitor/cli": "^3.4.3",
         "@capacitor/core": "^3.4.3",
+        "@capacitor/geolocation": "^1.3.1",
         "@capacitor/ios": "^3.4.3",
         "axios": "^0.26.1",
         "express": "^4.17.3",

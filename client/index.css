@@ -1,19 +1,16 @@
 .bus {
-    width: 20%;
     height: 5%;
     background-color: rgb(139, 3, 139);
     color: white;
 }
 
 .subway {
-    width: 20%;
     height: 5%;
     background-color: rgb(9, 9, 117);
     color: white;
 }
 
 .suburban {
-    width: 20%;
     height: 5%;
     background-color: rgb(12, 116, 3);
     color: white;

@@ -29,15 +29,23 @@ const app = Vue.createApp({
             journeyDialog: false,
             activeTab: "Fahrplan",
             stopsNearMe: '',
+            loadingScreen: false,
         }
     },
     methods: {
         async getLocations() {
+            this.loadingScreen = true;
             var location = await axios.get(
                 "https://v5.bvg.transport.rest/locations?poi=false&addresses=false&query=" + encodeURI(this.input) + "&linesOfStops=true"
             );
             this.locations = location.data;
+            this.loadingScreen = false;
             console.log(this.locations);
+        },
+
+        deleteStartEnd() {
+            this.start = {};
+            this.end = {};
         },
 
         async showDetail(id) {
@@ -60,7 +68,7 @@ const app = Vue.createApp({
             );
             this.departures = getDepartures.data;
             this.departures.forEach(element => {
-                element.when = new Date(element.when).toLocaleDateString('de-de') + " " + new Date(element.when).toLocaleTimeString('de-de');
+                element.when = new Date(element.when).toLocaleTimeString('de-de');
             });
             console.log(this.departures);
         },
@@ -70,6 +78,27 @@ const app = Vue.createApp({
                 "https://v5.bvg.transport.rest/journeys?from=" + this.start.id + "&to=" + this.end.id + "&results=4&stopovers=true"
             );
             this.journey = getJourney.data;
+            this.journey.journeys.forEach(element => {
+                element.legs.forEach(element => {
+                    element.arrival = new Date(element.arrival).toLocaleTimeString('de-de');
+                    element.departure = new Date(element.departure).toLocaleTimeString('de-de');
+                    element.arrivalDelay = element.arrivalDelay / 60;
+                    element.arrivalDelay = element.arrivalDelay / 60;
+                    if (!element.line) {
+                        element.line = {
+                            adminCode: "LAUFEN",
+                            express: false,
+                            fahrtNr: "laufen",
+                            id: "laufen",
+                            metro: false,
+                            mode: "Beine",
+                            name: "Laufen",
+                            night: false,
+                            nr: 1,
+                        }
+                    }
+                });
+            });
             console.log(this.journey);
             this.journeyDialog = true;
         },
@@ -102,6 +131,7 @@ const app = Vue.createApp({
             this.activeTab = item;
             if (item == "Radar") {
                 this.openNearByMe();
+                this.loadingScreen = true;
             }
         },
 
@@ -113,15 +143,19 @@ const app = Vue.createApp({
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(this.getNearByMe, this.onGeoError);
             } else {
-                alert("Please check your permissions");
+                console.log("Please check your permissions");
             }
         },
 
         async getNearByMe(position) {
+            console.log(position.coords);
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
-            var getNearByMe = await axios.get("https://v5.bvg.transport.rest/stops/nearby?latitude=" + latitude + "&longitude=" + longitude + "&linesOfStops=true")
+            var url = "https://v5.bvg.transport.rest/stops/nearby?latitude=" + latitude + "&longitude=" + longitude + "&linesOfStops=true"
+            console.log(url);
+            var getNearByMe = await axios.get(url);
             this.stopsNearMe = getNearByMe.data;
+            this.loadingScreen = false;
             console.log(this.stopsNearMe);
         },
 

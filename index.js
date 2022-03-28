@@ -3,7 +3,6 @@
 const express = require("express");
 const app = express();
 const path = require("path")
-const axios = require('axios').default;
 
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + "/client/index.html"))
