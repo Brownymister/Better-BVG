@@ -48,13 +48,23 @@
                                 <h3>Fahrplan</h3>
                                 <p>Routen planen und Informationen über Stationen abrufen.</p>
 
-                                <q-separator></q-separator>
+                                <q-separator style="margin-bottom: 1%;"></q-separator>
                                 <div>
-                                    <p>Start: <b>{{ start.name }}</b></p>
-                                    </br>
-                                    <p>Ende: <b>{{ end.name }}</b>
-                                    </p>
-                                    <q-input v-model="input" label="Start"></q-input>
+                                    <div class="row">
+                                        <div class="col">
+                                            <p>Start: <b>{{ start.name }}</b></p>
+                                            <p>Ende: <b>{{ end.name }}</b>
+                                            </p>
+                                        </div>
+                                        <div class="col" style="margin-top:1%; margin-left: 60%;">
+                                            <q-btn outline color="primary" icon="swap_vert" @click="reverStartEnd"></q-btn>
+                                        </div>
+                                    </div>
+                                    <q-input v-model="input" label="Start">
+                                        <template v-slot:append>
+                                            <q-icon name="close" @click="input = ''" class="cursor-pointer" />
+                                          </template>
+                                    </q-input>
                                     <q-btn outline color="primary" label="Suche" style="margin: 1%;" @click="getLocations"></q-btn>
                                     <q-btn outline color="primary" label="Route berechnen" style="margin: 1%;" @click="getJourney"></q-btn>
                                     <q-btn outline color="primary" label="Route löschen" style="margin: 1%;" @click="deleteStartEnd"></q-btn>
@@ -64,7 +74,7 @@
                                         <q-card-section>
                                             <div class="text-h6">{{element.name}}</div>
                                             <div class="row">
-                                                <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.mode }} ||&nbsp;</div>
+                                                <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.product }} ||&nbsp;</div>
                                             </div>
                                         </q-card-section>
 
@@ -89,9 +99,18 @@
                                             <div>
                                                 <q-card v-for="element in journey.journeys" style="margin-top: 2%;" class="my-card">
                                                     <q-card-section>
-                                                        <div v-for="leg in element.legs" class="text-h6">{{ leg.line.name }}&nbsp;{{ leg.line.mode }}&nbsp;{{ leg.departure }}&nbsp;-&nbsp;{{ leg.arrival }}</div>
+                                                        <div class="row" style="width: 100%;">
+                                                            <div v-for="element in element.legs" :class="element.line.product" :style="element.percent">
+                                                                <p style="text-align: center;">{{element.line.name}}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div v-for="leg in element.legs" class="text-h6">{{ leg.line.name }}&nbsp;{{ leg.line.product }}&nbsp;{{ leg.departure }}&nbsp;-&nbsp;{{ leg.arrival }}</div>
                                                         <div class="row">
-                                                            <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.mode }} ||&nbsp;</div>
+                                                            <div v-for="line in element.lines" class="text-subtitle2">{{line.name}} {{ line.product }} ||&nbsp;</div>
+                                                            <div class="text-subtitle2">Dauer: {{ element.duration }} min</div>
+                                                        </div>
+                                                        <div class="q-pa-md q-gutter-sm">
+                                                            <q-tree :nodes="simple[journey.id]" dense node-key="label" v-model:expanded="expanded" />
                                                         </div>
                                                     </q-card-section>
 
@@ -123,7 +142,7 @@
                                     <q-card-section>
                                         <div class="text-h6">{{element.name}}</div>
                                         <div class="row">
-                                            <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} || {{ line.mode }}&nbsp;</div>
+                                            <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} || {{ line.product }}&nbsp;</div>
                                         </div>
                                     </q-card-section>
 
@@ -140,7 +159,7 @@
                                     <q-card-section>
                                         <div class="text-h5">{{ stopInfo.name }}</div>
                                         <div class="row">
-                                            <div v-for="line in stopInfo.lines" class="text-subtitle3">{{line.name}} || {{ line.mode }}&nbsp;</div>
+                                            <div v-for="line in stopInfo.lines" class="text-subtitle3">{{line.name}} || {{ line.product }}&nbsp;</div>
                                         </div>
                                     </q-card-section>
 
@@ -152,8 +171,8 @@
                                             <div style="margin-left:2%">
                                                 <div class="text-h4">Ankünfte in den nächsten 10 Minuten:</div>
                                                 <div v-for="departure in departures" class="text-subtitle3 row">
-                                                    Linie: &nbsp; <b>{{ departure.line.name }}</b>&nbsp;{{ departure.line.mode }} || &nbsp; Richtung: &nbsp;<b>{{ departure.direction }}</b> &nbsp;||&nbsp; Ankunft: &nbsp;<b>{{ departure.when }}</b> &nbsp;||&nbsp;
-                                                    <p style="color:red"> Versp&auml;tung: &nbsp;<b>{{ departure.delay / 60 }} &nbsp;min</b>
+                                                    Linie: &nbsp; <b>{{ departure.line.name }}</b>&nbsp;{{ departure.line.product }} || &nbsp; Richtung: &nbsp;<b>{{ departure.direction }}</b> &nbsp;||&nbsp; Ankunft: &nbsp;<b>{{ departure.plannedWhen }}</b>
+                                                    <p style="color:red"><b>{{ departure.delay }} &nbsp;min</b>
                                                     </p>
                                                 </div>
                                             </div>

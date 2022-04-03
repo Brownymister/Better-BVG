@@ -1,6 +1,6 @@
 {
-  "appId": "com.Brownymister",
-  "appName": "BVG-client",
-  "webDir": "client",
-  "bundledWebRuntime": false
+    "appId": "com.Brownymister",
+    "appName": "BetterBVG",
+    "webDir": "client",
+    "bundledWebRuntime": false
 }

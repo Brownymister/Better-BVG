@@ -10,6 +10,10 @@ const menuList = [{
     icon: 'radar',
     label: 'Radar',
     separator: true
+}, {
+    icon: 'github',
+    label: 'Github',
+    separator: true
 }, ]
 
 const app = Vue.createApp({
@@ -17,8 +21,8 @@ const app = Vue.createApp({
         return {
             input: "",
             locations: [],
-            start: {},
-            end: {},
+            start: false,
+            end: false,
             detailDialog: false,
             stopInfo: {},
             mapsUrl: "",
@@ -30,6 +34,7 @@ const app = Vue.createApp({
             activeTab: "Fahrplan",
             stopsNearMe: '',
             loadingScreen: false,
+            simple: {}
         }
     },
     methods: {
@@ -44,8 +49,8 @@ const app = Vue.createApp({
         },
 
         deleteStartEnd() {
-            this.start = {};
-            this.end = {};
+            this.start = false;
+            this.end = false;
         },
 
         async showDetail(id) {
@@ -68,39 +73,80 @@ const app = Vue.createApp({
             );
             this.departures = getDepartures.data;
             this.departures.forEach(element => {
-                element.when = new Date(element.when).toLocaleTimeString('de-de');
+                element.plannedWhen = new Date(element.when).toLocaleTimeString('de-de');
+                if (element.delay > -1) {
+                    element.delay = "+ " + (element.delay / 60).toString();
+                }
             });
             console.log(this.departures);
         },
 
         async getJourney(id) {
-            var getJourney = await axios.get(
-                "https://v5.bvg.transport.rest/journeys?from=" + this.start.id + "&to=" + this.end.id + "&results=4&stopovers=true"
-            );
-            this.journey = getJourney.data;
-            this.journey.journeys.forEach(element => {
-                element.legs.forEach(element => {
-                    element.arrival = new Date(element.arrival).toLocaleTimeString('de-de');
-                    element.departure = new Date(element.departure).toLocaleTimeString('de-de');
-                    element.arrivalDelay = element.arrivalDelay / 60;
-                    element.arrivalDelay = element.arrivalDelay / 60;
-                    if (!element.line) {
-                        element.line = {
-                            adminCode: "LAUFEN",
-                            express: false,
-                            fahrtNr: "laufen",
-                            id: "laufen",
-                            metro: false,
-                            mode: "Beine",
-                            name: "Laufen",
-                            night: false,
-                            nr: 1,
-                        }
-                    }
-                });
-            });
-            console.log(this.journey);
-            this.journeyDialog = true;
+            try {
+                if (this.start && this.end) {
+                    var getJourney = await axios.get(
+                        "https://v5.bvg.transport.rest/journeys?from=" + this.start.id + "&to=" + this.end.id + "&results=4&stopovers=true"
+                    );
+                    this.journey = getJourney.data;
+                    this.journey.journeys.forEach(journey => {
+                        journey.departure = false;
+                        journey.arrival = "";
+                        journey.id = URL.createObjectURL(new Blob([])).substr(-36);
+                        journey.legs.forEach(element => {
+                            if (!journey.departure) {
+                                journey.departure = new Date(element.departure);
+                            }
+                            journey.arrival = new Date(element.arrival);
+
+                            element.arrivalDate = new Date(element.arrival);
+                            element.departureDate = new Date(element.departure);
+                            element.arrival = new Date(element.arrival).toLocaleTimeString('de-de');
+                            element.departure = new Date(element.departure).toLocaleTimeString('de-de');
+                            element.arrivalDelay = element.arrivalDelay / 60;
+                            element.arrivalDelay = element.arrivalDelay / 60;
+                            if (!element.line) {
+                                element.line = {
+                                    adminCode: "GEHEN",
+                                    express: false,
+                                    fahrtNr: "gehen",
+                                    id: "gehen",
+                                    metro: false,
+                                    product: "Beine",
+                                    name: "gehen",
+                                    night: false,
+                                    nr: 1,
+                                }
+                            }
+
+                        });
+                        this.simple[journey.id] = {}
+                        this.simple[journey.id].label = label = this.start.name + " - " + this.end.name;
+                        this.simple[journey.id].children = [
+                            journey.legs
+                        ]
+                        var lastLeg = false;
+                        journey.duration = (journey.arrival - journey.departure) / 1000 / 60;
+                        journey.legs.forEach(element => {
+                            if (!lastLeg) {
+                                element.duration = (element.arrivalDate - element.departureDate) / 1000 / 60;
+                            } else {
+                                element.duration = (element.arrivalDate - lastLeg.arrivalDate) / 1000 / 60;
+                            }
+                            element.percent = "width: " + (element.duration * 100 / journey.duration).toString() + "%;";
+                            lastLeg = element;
+                        });
+                    });
+                    console.log(this.simple)
+                    console.log(this.journey);
+                    this.journeyDialog = true;
+                }
+            } catch (err) {
+                this.$q.notify({
+                    message: 'Die Anfrage ist ungüldtig.',
+                    icon: 'error',
+                    color: "negative",
+                })
+            }
         },
 
         setAsStart(station) {
@@ -113,6 +159,13 @@ const app = Vue.createApp({
             if (this.start != station) {
                 this.end = station;
             }
+        },
+
+        reverStartEnd() {
+            start = this.start;
+            end = this.end;
+            this.start = end;
+            this.end = start;
         },
 
         convertSring(str) {
@@ -129,6 +182,7 @@ const app = Vue.createApp({
 
         changeTab(item) {
             this.activeTab = item;
+            this.drawer = false;
             if (item == "Radar") {
                 this.openNearByMe();
                 this.loadingScreen = true;

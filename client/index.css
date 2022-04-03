@@ -2,16 +2,54 @@
     height: 5%;
     background-color: rgb(139, 3, 139);
     color: white;
+    border-right: 1px dashed rgb(255, 255, 255);
+    border-left: 1px dashed rgb(255, 255, 255);
 }
 
 .subway {
     height: 5%;
     background-color: rgb(9, 9, 117);
     color: white;
+    border-right: 1px dashed rgb(255, 255, 255);
+    border-left: 1px dashed rgb(255, 255, 255);
 }
 
 .suburban {
     height: 5%;
     background-color: rgb(12, 116, 3);
     color: white;
+    border-right: 1px dashed rgb(255, 255, 255);
+    border-left: 1px dashed rgb(255, 255, 255);
+}
+
+.Beine {
+    height: 5%;
+    background-color: rgb(255, 217, 0);
+    color: black;
+    border-right: 1px dashed rgb(255, 255, 255);
+    border-left: 1px dashed rgb(255, 255, 255);
+}
+
+.tram {
+    height: 5%;
+    background-color: rgb(255, 119, 0);
+    color: white;
+    border-right: 1px dashed rgb(255, 255, 255);
+    border-left: 1px dashed rgb(255, 255, 255);
+}
+
+.ferry {
+    height: 5%;
+    background-color: rgb(6, 133, 218);
+    color: white;
+    border-right: 1px dashed rgb(255, 255, 255);
+    border-left: 1px dashed rgb(255, 255, 255);
+}
+
+.regional {
+    height: 5%;
+    background-color: rgb(218, 6, 6);
+    color: white;
+    border-right: 1px dashed rgb(255, 255, 255);
+    border-left: 1px dashed rgb(255, 255, 255);
 }

@@ -17,7 +17,7 @@ app.get('/index.css', function(req, res) {
 });
 
 app.get('/favicon.ico', function(req, res) {
-    res.sendFile(path.join(__dirname + "/favicon.ico"))
+    res.sendFile(path.join(__dirname + "/230x0wFehrnseeturm.png"))
 });
 
 app.get('/test', function(req, res) {
