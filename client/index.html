@@ -20,7 +20,7 @@
                     <q-header elevated class="bg-primary">
                         <q-toolbar>
                             <q-btn flat @click="drawer = !drawer" round dense icon="menu"></q-btn>
-                            <q-toolbar-title>BVG-client</q-toolbar-title>
+                            <q-toolbar-title>Better-BVG</q-toolbar-title>
                         </q-toolbar>
                     </q-header>
 
@@ -36,7 +36,6 @@
                                         {{ menuItem.label }}
                                         </q-item-section>
                                     </q-item>
-                                  <!--   <q-separator :key="'sep' + index"  v-if="menuItem.separator"></q-separator> -->
                                 </template>
                             </q-list>
                         </q-scroll-area>
@@ -62,8 +61,8 @@
                                     </div>
                                     <q-input v-model="input" label="Start">
                                         <template v-slot:append>
-                                            <q-icon name="close" @click="input = ''" class="cursor-pointer" />
-                                          </template>
+                                            <q-icon name="close" @click="input = ''" class="cursor-pointer"></q-icon>
+                                        </template>
                                     </q-input>
                                     <q-btn outline color="primary" label="Suche" style="margin: 1%;" @click="getLocations"></q-btn>
                                     <q-btn outline color="primary" label="Route berechnen" style="margin: 1%;" @click="getJourney"></q-btn>
@@ -72,7 +71,10 @@
                                 <div>
                                     <q-card v-if="locations != []" v-for="element in locations" style="margin-top: 2%;" :key="element.id" class="my-card">
                                         <q-card-section>
-                                            <div class="text-h6">{{element.name}}</div>
+                                            <div class="row">
+                                                <div class="text-h6">{{element.name}}</div>
+                                                <q-btn flat round @click="saveInLocalstorage(element)" color="red" icon="bookmark"></q-btn>
+                                            </div>
                                             <div class="row">
                                                 <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.product }} ||&nbsp;</div>
                                             </div>
@@ -87,6 +89,30 @@
                                         </q-card-actions>
                                     </q-card>
                                 </div>
+
+                                <div v-if="favoriteLocations.length > 0">
+                                    <h4>Favoriten:</h4>
+                                    <q-separator style="margin-bottom: 1%;"></q-separator>
+                                    <q-card v-for="element in favoriteLocations" style="margin-top: 2%;" :key="element.id" class="my-card">
+                                        <q-card-section>
+                                            <div class="row">
+                                                <div class="text-h6">{{element.name}}</div>
+                                            </div>
+                                            <div class="row">
+                                                <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.product }} ||&nbsp;</div>
+                                            </div>
+                                        </q-card-section>
+
+                                        <q-separator></q-separator>
+
+                                        <q-card-actions vertical>
+                                            <q-btn outline color="primary" @click="showDetail(element.id)">Details</q-btn>
+                                            <q-btn outline color="primary" @click="setAsStart(element)">Als Start setzten</q-btn>
+                                            <q-btn outline color="primary" @click="setAsEnd(element)">Als Ende setzten</q-btn>
+                                        </q-card-actions>
+                                    </q-card>
+                                </div>
+
                                 <q-dialog v-model="journeyDialog" full-width>
                                     <q-card>
                                         <q-card-section>
@@ -109,17 +135,36 @@
                                                             <div v-for="line in element.lines" class="text-subtitle2">{{line.name}} {{ line.product }} ||&nbsp;</div>
                                                             <div class="text-subtitle2">Dauer: {{ element.duration }} min</div>
                                                         </div>
-                                                        <div class="q-pa-md q-gutter-sm">
-                                                            <q-tree :nodes="simple[journey.id]" dense node-key="label" v-model:expanded="expanded" />
-                                                        </div>
                                                     </q-card-section>
 
                                                     <q-separator></q-separator>
 
                                                     <q-card-actions vertical>
-                                                        <q-btn outline color="primary" @click="showDetail(element.id)">Details</q-btn>
+                                                        <q-btn outline color="primary" @click="showjourneyDetails(element)">Details</q-btn>
                                                     </q-card-actions>
                                                 </q-card>
+                                            </div>
+                                        </q-card-section>
+
+                                        <q-card-actions align="right" class="bg-white text-teal">
+                                            <q-btn flat label="OK" v-close-popup outline color="primary"></q-btn>
+                                        </q-card-actions>
+                                    </q-card>
+                                </q-dialog>
+
+                                <q-dialog v-model="journeyDetails" full-width>
+                                    <q-card>
+                                        <q-card-section>
+                                            <div class="text-h5"><b> {{ start.name }}</b> bis <b>{{ end.name }}</b></div>
+                                            <div class="row">
+                                                <div class="q-pa-md q-gutter-sm">
+                                                    <q-tree :nodes="simple" dense node-key="label" v-model:expanded="expanded"></q-tree>
+                                                </div>
+                                            </div>
+                                        </q-card-section>
+                                        <q-card-section class="q-pt-none">
+                                            <div>
+
                                             </div>
                                         </q-card-section>
 
@@ -190,6 +235,7 @@
                             <div v-if="loadingScreen == true">
                                 <q-spinner-ball color="primary" class="fixed-center" size="30%"></q-spinner-oval>
                             </div>
+
                         </q-page>
                     </q-page-container>
                 </q-layout>

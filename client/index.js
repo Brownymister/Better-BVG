@@ -11,8 +11,8 @@ const menuList = [{
     label: 'Radar',
     separator: true
 }, {
-    icon: '',
-    label: 'Github',
+    icon: 'info',
+    label: 'info',
     separator: true
 }, ]
 
@@ -34,8 +34,19 @@ const app = Vue.createApp({
             activeTab: "Fahrplan",
             stopsNearMe: '',
             loadingScreen: false,
-            simple: {}
+            simple: {},
+            journeyDetails: false,
+            favoriteLocations: [],
         }
+    },
+    created() {
+        if (!window.localStorage.getItem("favoriteLocations")) {
+            window.localStorage.setItem("favoriteLocations", JSON.stringify([]))
+        }
+        this.$nextTick(function() {
+            this.favoriteLocations = JSON.parse(localStorage.getItem("favoriteLocations"));
+            console.log(this.favoriteLocations)
+        });
     },
     methods: {
         async getLocations() {
@@ -51,6 +62,7 @@ const app = Vue.createApp({
         deleteStartEnd() {
             this.start = false;
             this.end = false;
+            this.locations = []
         },
 
         async showDetail(id) {
@@ -81,7 +93,7 @@ const app = Vue.createApp({
             console.log(this.departures);
         },
 
-        async getJourney(id) {
+        async getJourney() {
             try {
                 if (this.start && this.end) {
                     var getJourney = await axios.get(
@@ -119,9 +131,8 @@ const app = Vue.createApp({
                             }
 
                         });
-                        this.simple[journey.id] = {}
-                        this.simple[journey.id].label = label = this.start.name + " - " + this.end.name;
-                        this.simple[journey.id].children = [
+                        this.simple.label = label = this.start.name + " - " + this.end.name;
+                        this.simple.children = [
                             journey.legs
                         ]
                         var lastLeg = false;
@@ -141,12 +152,20 @@ const app = Vue.createApp({
                     this.journeyDialog = true;
                 }
             } catch (err) {
-                this.$q.notify({
-                    message: 'Die Anfrage ist ungüldtig.',
-                    icon: 'error',
-                    color: "negative",
-                })
+                this.triggerInvalidRequestAlert();
             }
+        },
+
+        triggerInvalidRequestAlert() {
+            this.$q.notify({
+                message: 'Die Anfrage ist ungüldtig.',
+                icon: 'error',
+                color: "negative",
+            })
+        },
+
+        showjourneyDetails(journey) {
+            this.journeyDetails = true;
         },
 
         setAsStart(station) {
@@ -218,6 +237,14 @@ const app = Vue.createApp({
 
         onGeoError(position) {
             console.error("Error code " + position.code + ". " + position.message);
+        },
+
+        saveInLocalstorage(location) {
+            var favoriteLocations = JSON.parse(window.localStorage.getItem("favoriteLocations"));
+            this.favoriteLocations = favoriteLocations;
+            favoriteLocations.push(location);
+            localStorage.setItem("favoriteLocations", JSON.stringify(favoriteLocations));
+            console.log(JSON.parse(window.localStorage.getItem("favoriteLocations")));
         },
     }
 })
