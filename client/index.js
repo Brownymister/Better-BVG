@@ -11,7 +11,7 @@ const menuList = [{
     label: 'Radar',
     separator: true
 }, {
-    icon: 'github',
+    icon: '',
     label: 'Github',
     separator: true
 }, ]
@@ -186,6 +186,9 @@ const app = Vue.createApp({
             if (item == "Radar") {
                 this.openNearByMe();
                 this.loadingScreen = true;
+            }
+            if (item == "Github") {
+                window.location = 'https://github.com/Brownymister/bvg-api-client'
             }
         },
 
