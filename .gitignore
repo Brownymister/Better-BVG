@@ -3,3 +3,5 @@ package-lock.json
 /ios
 
 .DS_Store
+
+.vscode

@@ -19,6 +19,7 @@ const menuList = [{
 const app = Vue.createApp({
     data() {
         return {
+            version: '0.0.1',
             input: "",
             locations: [],
             start: false,
@@ -45,18 +46,19 @@ const app = Vue.createApp({
         }
         this.$nextTick(function() {
             this.favoriteLocations = JSON.parse(localStorage.getItem("favoriteLocations"));
-            console.log(this.favoriteLocations)
         });
     },
     methods: {
         async getLocations() {
-            this.loadingScreen = true;
-            var location = await axios.get(
-                "https://v5.bvg.transport.rest/locations?poi=false&addresses=false&query=" + encodeURI(this.input) + "&linesOfStops=true"
-            );
-            this.locations = location.data;
-            this.loadingScreen = false;
-            console.log(this.locations);
+            if (this.input != "") {
+                this.loadingScreen = true;
+                var location = await axios.get(
+                    "https://v5.bvg.transport.rest/locations?poi=false&addresses=false&query=" + encodeURI(this.input) + "&linesOfStops=true"
+                );
+                this.locations = location.data;
+                this.loadingScreen = false;
+                console.log(this.locations);
+            }
         },
 
         deleteStartEnd() {
@@ -88,6 +90,8 @@ const app = Vue.createApp({
                 element.plannedWhen = new Date(element.when).toLocaleTimeString('de-de');
                 if (element.delay > -1) {
                     element.delay = "+ " + (element.delay / 60).toString();
+                } else {
+                    element.delay = (element.delay / 60).toString();
                 }
             });
             console.log(this.departures);
@@ -150,6 +154,8 @@ const app = Vue.createApp({
                     console.log(this.simple)
                     console.log(this.journey);
                     this.journeyDialog = true;
+                } else {
+                    triggerInvalidRequestAlert();
                 }
             } catch (err) {
                 this.triggerInvalidRequestAlert();
@@ -206,9 +212,6 @@ const app = Vue.createApp({
                 this.openNearByMe();
                 this.loadingScreen = true;
             }
-            if (item == "Github") {
-                window.location = 'https://github.com/Brownymister/bvg-api-client'
-            }
         },
 
         async openNearByMe() {
@@ -244,10 +247,14 @@ const app = Vue.createApp({
             this.favoriteLocations = favoriteLocations;
             favoriteLocations.push(location);
             localStorage.setItem("favoriteLocations", JSON.stringify(favoriteLocations));
-            console.log(JSON.parse(window.localStorage.getItem("favoriteLocations")));
+            this.$q.notify({
+                message: 'Die Station <b>' + location.name + '</b> wurde zu deinen Favoriten hinzugefügt',
+                icon: 'favorite',
+                color: "positive",
+            })
         },
     }
-})
+});
 app.use(Quasar);
 Quasar.lang.set(Quasar.lang.de);
 const vm = app.mount('#q-app')

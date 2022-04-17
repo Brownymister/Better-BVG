@@ -1,6 +1,8 @@
-# bvg-api-client
+# Better-BVG
 
-A Capacitor app which uses the BVG(Berliner Verkehrsbetriebe)-API to show information about Bus-, S- and U-Bahn stops. The app also shows routes with a given start and end point.
+A BVG(Berliner Verkehrsbetriebe) app which uses capacitor. It shows information about Bus-, S- and U-Bahn stops. The app also shows routes with a given start and end point.
+
+API-Doku: [https://v5.bvg.transport.rest/api.html#get-stopsid](https://v5.bvg.transport.rest/api.html#get-stopsid)
 
 # install
 1. Initiate capacitor project

@@ -17,19 +17,19 @@
         <div class="q-pa-md">
             <div class="q-pa-md">
                 <q-layout view="hHh Lpr lff">
-                    <q-header elevated class="bg-primary">
+                    <q-header elevated="" class="bg-primary">
                         <q-toolbar>
-                            <q-btn flat @click="drawer = !drawer" round dense icon="menu"></q-btn>
+                            <q-btn flat="" @click="drawer = !drawer" round="" dense="" icon="menu"></q-btn>
                             <q-toolbar-title>Better-BVG</q-toolbar-title>
                         </q-toolbar>
                     </q-header>
 
-                    <q-drawer v-model="drawer" show-if-above :width="200" :breakpoint="500" bordered class="bg-grey-3">
+                    <q-drawer v-model="drawer" show-if-above="" :width="200" :breakpoint="500" bordered="" class="bg-grey-3">
                         <q-scroll-area class="fit">
                             <q-list>
                                 <template v-for="(menuItem, index) in menuList" :key="index">
-                                    <q-item clickable :active="menuItem.label === activeTab" @click="changeTab(menuItem.label)" v-ripple>
-                                        <q-item-section avatar>
+                                    <q-item clickable="" :active="menuItem.label === activeTab" @click="changeTab(menuItem.label)" v-ripple="">
+                                        <q-item-section avatar="">
                                         <q-icon :name="menuItem.icon"></q-icon>
                                         </q-item-section>
                                         <q-item-section>
@@ -42,38 +42,34 @@
                     </q-drawer>
 
                     <q-page-container>
-                        <q-page padding>
+                        <q-page padding="">
                             <div v-if="activeTab == 'Fahrplan'">
                                 <h3>Fahrplan</h3>
                                 <p>Routen planen und Informationen über Stationen abrufen.</p>
 
                                 <q-separator style="margin-bottom: 1%;"></q-separator>
                                 <div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <p>Start: <b>{{ start.name }}</b></p>
-                                            <p>Ende: <b>{{ end.name }}</b>
-                                            </p>
-                                        </div>
-                                        <div class="col" style="margin-top:1%; margin-left: 60%;">
-                                            <q-btn outline color="primary" icon="swap_vert" @click="reverStartEnd"></q-btn>
-                                        </div>
+                                    <div>
+                                        <p>Start: <b>{{ start.name }}</b></p>
+                                        <q-btn outline="" color="primary" icon="swap_vert" @click="reverStartEnd"></q-btn>
+                                        <p>Ende: <b>{{ end.name }}</b>
+                                        </p>
                                     </div>
-                                    <q-input v-model="input" label="Start">
-                                        <template v-slot:append>
+                                    <q-input filled="" v-model="input" label="Ortsuche">
+                                        <template v-slot:append="">
                                             <q-icon name="close" @click="input = ''" class="cursor-pointer"></q-icon>
                                         </template>
                                     </q-input>
-                                    <q-btn outline color="primary" label="Suche" style="margin: 1%;" @click="getLocations"></q-btn>
-                                    <q-btn outline color="primary" label="Route berechnen" style="margin: 1%;" @click="getJourney"></q-btn>
-                                    <q-btn outline color="primary" label="Route löschen" style="margin: 1%;" @click="deleteStartEnd"></q-btn>
+                                    <q-btn outline="" color="primary" label="Suche" style="margin: 1%;" @click="getLocations"></q-btn>
+                                    <q-btn outline="" color="primary" label="Suche löschen" style="margin: 1%;" @click="deleteStartEnd"></q-btn>
+                                    <q-btn outline="" color="primary" label="Route berechnen" style="margin: 1%;" @click="getJourney"></q-btn>
                                 </div>
                                 <div>
                                     <q-card v-if="locations != []" v-for="element in locations" style="margin-top: 2%;" :key="element.id" class="my-card">
                                         <q-card-section>
                                             <div class="row">
                                                 <div class="text-h6">{{element.name}}</div>
-                                                <q-btn flat round @click="saveInLocalstorage(element)" color="red" icon="bookmark"></q-btn>
+                                                <q-btn flat="" round="" @click="saveInLocalstorage(element)" color="red" icon="bookmark"></q-btn>
                                             </div>
                                             <div class="row">
                                                 <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.product }} ||&nbsp;</div>
@@ -82,10 +78,10 @@
 
                                         <q-separator></q-separator>
 
-                                        <q-card-actions vertical>
-                                            <q-btn outline color="primary" @click="showDetail(element.id)">Details</q-btn>
-                                            <q-btn outline color="primary" @click="setAsStart(element)">Als Start setzten</q-btn>
-                                            <q-btn outline color="primary" @click="setAsEnd(element)">Als Ende setzten</q-btn>
+                                        <q-card-actions vertical="">
+                                            <q-btn outline="" color="primary" @click="showDetail(element.id)">Details</q-btn>
+                                            <q-btn outline="" color="primary" @click="setAsStart(element)">Als Start setzten</q-btn>
+                                            <q-btn outline="" color="primary" @click="setAsEnd(element)">Als Ende setzten</q-btn>
                                         </q-card-actions>
                                     </q-card>
                                 </div>
@@ -105,15 +101,15 @@
 
                                         <q-separator></q-separator>
 
-                                        <q-card-actions vertical>
-                                            <q-btn outline color="primary" @click="showDetail(element.id)">Details</q-btn>
-                                            <q-btn outline color="primary" @click="setAsStart(element)">Als Start setzten</q-btn>
-                                            <q-btn outline color="primary" @click="setAsEnd(element)">Als Ende setzten</q-btn>
+                                        <q-card-actions vertical="">
+                                            <q-btn outline="" color="primary" @click="showDetail(element.id)">Details</q-btn>
+                                            <q-btn outline="" color="primary" @click="setAsStart(element)">Als Start setzten</q-btn>
+                                            <q-btn outline="" color="primary" @click="setAsEnd(element)">Als Ende setzten</q-btn>
                                         </q-card-actions>
                                     </q-card>
                                 </div>
 
-                                <q-dialog v-model="journeyDialog" full-width>
+                                <q-dialog v-model="journeyDialog" full-width="">
                                     <q-card>
                                         <q-card-section>
                                             <div class="text-h5"><b> {{ start.name }}</b> bis <b>{{ end.name }}</b></div>
@@ -139,26 +135,26 @@
 
                                                     <q-separator></q-separator>
 
-                                                    <q-card-actions vertical>
-                                                        <q-btn outline color="primary" @click="showjourneyDetails(element)">Details</q-btn>
+                                                    <q-card-actions vertical="">
+                                                        <q-btn outline="" color="primary" @click="showjourneyDetails(element)">Details</q-btn>
                                                     </q-card-actions>
                                                 </q-card>
                                             </div>
                                         </q-card-section>
 
                                         <q-card-actions align="right" class="bg-white text-teal">
-                                            <q-btn flat label="OK" v-close-popup outline color="primary"></q-btn>
+                                            <q-btn flat="" label="OK" v-close-popup="" outline="" color="primary"></q-btn>
                                         </q-card-actions>
                                     </q-card>
                                 </q-dialog>
 
-                                <q-dialog v-model="journeyDetails" full-width>
+                                <q-dialog v-model="journeyDetails" full-width="">
                                     <q-card>
                                         <q-card-section>
                                             <div class="text-h5"><b> {{ start.name }}</b> bis <b>{{ end.name }}</b></div>
                                             <div class="row">
                                                 <div class="q-pa-md q-gutter-sm">
-                                                    <q-tree :nodes="simple" dense node-key="label" v-model:expanded="expanded"></q-tree>
+                                                    <q-tree :nodes="simple" dense="" node-key="label" v-model:expanded="expanded"></q-tree>
                                                 </div>
                                             </div>
                                         </q-card-section>
@@ -169,7 +165,7 @@
                                         </q-card-section>
 
                                         <q-card-actions align="right" class="bg-white text-teal">
-                                            <q-btn flat label="OK" v-close-popup outline color="primary"></q-btn>
+                                            <q-btn flat="" label="OK" v-close-popup="" outline="" color="primary"></q-btn>
                                         </q-card-actions>
                                     </q-card>
                                 </q-dialog>
@@ -187,24 +183,24 @@
                                     <q-card-section>
                                         <div class="text-h6">{{element.name}}</div>
                                         <div class="row">
-                                            <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} || {{ line.product }}&nbsp;</div>
+                                            <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.product }}&nbsp;||</div>
                                         </div>
                                     </q-card-section>
 
                                     <q-separator></q-separator>
 
-                                    <q-card-actions vertical>
-                                        <q-btn outline color="primary" @click="showDetail(element.id)">Details</q-btn>
+                                    <q-card-actions vertical="">
+                                        <q-btn outline="" color="primary" @click="showDetail(element.id)">Details</q-btn>
                                     </q-card-actions>
                                 </q-card>
                             </div>
 
-                            <q-dialog v-model="detailDialog" full-width>
+                            <q-dialog v-model="detailDialog" full-width="">
                                 <q-card>
                                     <q-card-section>
                                         <div class="text-h5">{{ stopInfo.name }}</div>
                                         <div class="row">
-                                            <div v-for="line in stopInfo.lines" class="text-subtitle3">{{line.name}} || {{ line.product }}&nbsp;</div>
+                                            <div v-for="line in stopInfo.lines" class="text-subtitle3">{{line.name}} {{ line.product }}&nbsp;||</div>
                                         </div>
                                     </q-card-section>
 
@@ -214,10 +210,10 @@
                                                 <iframe v-bind:src="mapsUrl" width="300px" height="300px" frameborder="0"></iframe>
                                             </div>
                                             <div style="margin-left:2%">
-                                                <div class="text-h4">Ankünfte in den nächsten 10 Minuten:</div>
+                                                <div class="text-h5">Ankünfte in den nächsten 10 Minuten:</div>
                                                 <div v-for="departure in departures" class="text-subtitle3 row">
                                                     Linie: &nbsp; <b>{{ departure.line.name }}</b>&nbsp;{{ departure.line.product }} || &nbsp; Richtung: &nbsp;<b>{{ departure.direction }}</b> &nbsp;||&nbsp; Ankunft: &nbsp;<b>{{ departure.plannedWhen }}</b>
-                                                    <p style="color:red"><b>{{ departure.delay }} &nbsp;min</b>
+                                                    <p style="color:red"><b>&nbsp;{{ departure.delay }} &nbsp;min</b>
                                                     </p>
                                                 </div>
                                             </div>
@@ -225,15 +221,37 @@
                                     </q-card-section>
 
                                     <q-card-actions align="right" class="bg-white text-teal">
-                                        <q-btn v-close-popup outline color="primary" @click="setAsStart(stopInfo)">Als Start setzten</q-btn>
-                                        <q-btn v-close-popup outline color="primary" @click="setAsEnd(stopInfo)">Als Ende setzten</q-btn>
-                                        <q-btn flat label="OK" v-close-popup outline color="primary"></q-btn>
+                                        <q-btn v-close-popup="" outline="" color="primary" @click="setAsStart(stopInfo)">Als Start setzten</q-btn>
+                                        <q-btn v-close-popup="" outline="" color="primary" @click="setAsEnd(stopInfo)">Als Ende setzten</q-btn>
+                                        <q-btn flat="" label="OK" v-close-popup="" outline="" color="primary"></q-btn>
                                     </q-card-actions>
                                 </q-card>
                             </q-dialog>
 
+                            <div v-if="activeTab == 'info'">
+                                <h3>Info - Better-BVG</h3>
+                                <!-- <q-chip :clickable="false" dense="" color="primary" text-color="white" id="versionNumber">v0.0.1</q-chip> -->
+                                <img style="margin:1%;" alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/Brownymister/Better-BVG">
+                                <img style="margin:1%;" alt="GitHub" src="https://img.shields.io/github/license/brownymister/Better-BVG">
+                                <p>Build by Brownymister</p>
+                                <h4>Github: </h4>
+                                <a href="https://github.com/Brownymister/Better-BVG">https://github.com/Brownymister/Better-BVG</a>
+                                <p style="margin-top:3%;">
+                                    MIT License <br>
+                                    <br> Copyright (c) 2022 Brownymister <br>
+                                    <br> Permission is hereby granted, free of charge, to any person obtaining a copy <br> of this software and associated documentation files (the "Software"), to deal <br> in the Software without restriction, including
+                                    without limitation the rights <br> to use, copy, modify, merge, publish, distribute, sublicense, and/or sell <br> copies of the Software, and to permit persons to whom the Software is <br> furnished to do so, subject
+                                    to the following conditions: <br>
+                                    <br> The above copyright notice and this permission notice shall be included in all <br> copies or substantial portions of the Software. <br>
+                                    <br> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR <br> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, <br> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+                                    IN NO EVENT SHALL THE <br> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER <br> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, <br> OUT OF OR IN CONNECTION WITH
+                                    THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE <br> SOFTWARE. <br>
+                                </p>
+                            </div>
+
                             <div v-if="loadingScreen == true">
-                                <q-spinner-ball color="primary" class="fixed-center" size="30%"></q-spinner-oval>
+                                <q-spinner-ball color="primary" class="fixed-center" size="30%">
+                                </q-spinner-ball>
                             </div>
 
                         </q-page>
@@ -246,9 +264,8 @@
         <script src="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/quasar.umd.prod.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/lang/de.umd.prod.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js "></script>
-
-        <script src="./index.js">
-        </script>
+        <script src="./index.js"></script>
+    </div>
 </body>
 
 </html>
