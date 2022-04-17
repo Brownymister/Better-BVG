@@ -65,48 +65,8 @@
                                     <q-btn outline="" color="primary" label="Route berechnen" style="margin: 1%;" @click="getJourney"></q-btn>
                                 </div>
                                 <div>
-                                    <q-card v-if="locations != []" v-for="element in locations" style="margin-top: 2%;" :key="element.id" class="my-card">
-                                        <q-card-section>
-                                            <div class="row">
-                                                <div class="text-h6">{{element.name}}</div>
-                                                <q-btn flat="" round="" @click="saveInLocalstorage(element)" color="red" icon="bookmark"></q-btn>
-                                            </div>
-                                            <div class="row">
-                                                <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.product }} ||&nbsp;</div>
-                                            </div>
-                                        </q-card-section>
-
-                                        <q-separator></q-separator>
-
-                                        <q-card-actions vertical="">
-                                            <q-btn outline="" color="primary" @click="showDetail(element.id)">Details</q-btn>
-                                            <q-btn outline="" color="primary" @click="setAsStart(element)">Als Start setzten</q-btn>
-                                            <q-btn outline="" color="primary" @click="setAsEnd(element)">Als Ende setzten</q-btn>
-                                        </q-card-actions>
-                                    </q-card>
-                                </div>
-
-                                <div v-if="favoriteLocations.length > 0">
-                                    <h4>Favoriten:</h4>
-                                    <q-separator style="margin-bottom: 1%;"></q-separator>
-                                    <q-card v-for="element in favoriteLocations" style="margin-top: 2%;" :key="element.id" class="my-card">
-                                        <q-card-section>
-                                            <div class="row">
-                                                <div class="text-h6">{{element.name}}</div>
-                                            </div>
-                                            <div class="row">
-                                                <div v-for="line in element.lines" class="text-subtitle1">{{line.name}} {{ line.product }} ||&nbsp;</div>
-                                            </div>
-                                        </q-card-section>
-
-                                        <q-separator></q-separator>
-
-                                        <q-card-actions vertical="">
-                                            <q-btn outline="" color="primary" @click="showDetail(element.id)">Details</q-btn>
-                                            <q-btn outline="" color="primary" @click="setAsStart(element)">Als Start setzten</q-btn>
-                                            <q-btn outline="" color="primary" @click="setAsEnd(element)">Als Ende setzten</q-btn>
-                                        </q-card-actions>
-                                    </q-card>
+                                    <searchresult v-model:locations="locations" v-model:start="start" v-model:end="end" v-model:loadingScreen="loadingScreen" v-model:favoriteLocations="favoriteLocations"></searchresult>
+                                    <favoritelocations v-model:start="start" v-model:end="end"></favoritelocations>
                                 </div>
 
                                 <q-dialog v-model="journeyDialog" full-width="">
@@ -264,6 +224,8 @@
         <script src="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/quasar.umd.prod.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/quasar@2.6.0/dist/lang/de.umd.prod.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js "></script>
+        <script src="./searchResults.js"></script>
+        <script src="./favoriteLocations.js"></script>
         <script src="./index.js"></script>
     </div>
 </body>

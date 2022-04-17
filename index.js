@@ -12,6 +12,14 @@ app.get('/index.js', function(req, res) {
     res.sendFile(path.join(__dirname + "/client/index.js"))
 });
 
+app.get('/searchResults.js', function(req, res) {
+    res.sendFile(path.join(__dirname + "/client/searchResults.js"))
+});
+
+app.get('/favoriteLocations.js', function(req, res) {
+    res.sendFile(path.join(__dirname + "/client/favoriteLocations.js"))
+});
+
 app.get('/index.css', function(req, res) {
     res.sendFile(path.join(__dirname + "/client/index.css"))
 });
