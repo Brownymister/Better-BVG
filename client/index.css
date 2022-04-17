@@ -53,3 +53,11 @@
     border-right: 1px dashed rgb(255, 255, 255);
     border-left: 1px dashed rgb(255, 255, 255);
 }
+
+.express {
+    height: 5%;
+    background-color: rgb(196, 202, 206);
+    color: white;
+    border-right: 1px dashed rgb(255, 255, 255);
+    border-left: 1px dashed rgb(255, 255, 255);
+}
