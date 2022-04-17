@@ -11,32 +11,34 @@ const searchresult = Vue.defineComponent({
         this.$nextTick(function() {})
     },
     async created() {
-        this.$nextTick(function() {})
+        this.$nextTick(function() {
+            console.log(this.start);
+        })
     },
     data() {
         return {}
     },
     methods: {
         async showDetail(id) {
-            this.detailDialog = true;
+            vm.detailDialog = true;
             var stopInfo = await axios.get(
                 "https://v5.bvg.transport.rest/stops/" + encodeURI(id) + "?linesOfStops=true"
             );
-            this.stopInfo = stopInfo.data;
-            this.mapsUrl = "https://maps.google.com/maps?width=400%&height=400&hl=de&q=" +
-                this.stopInfo.location.latitude + "," + this.stopInfo.location.longitude + "&t=&z=14&ie=UTF8&iwloc=B&output=embed";
-            let keys = Object.keys(this.stopInfo.products).filter(k => this.stopInfo.products[k] == true);
+            vm.stopInfo = stopInfo.data;
+            vm.mapsUrl = "https://maps.google.com/maps?width=400%&height=400&hl=de&q=" +
+                vm.stopInfo.location.latitude + "," + vm.stopInfo.location.longitude + "&t=&z=14&ie=UTF8&iwloc=B&output=embed";
+            let keys = Object.keys(vm.stopInfo.products).filter(k => vm.stopInfo.products[k] == true);
             var offers = keys.toString().replace("subway", "U Bahn").replace("suburban", "S Bahn");
             await this.getDepartures(id);
-            console.log(this.stopInfo);
+            console.log(vm.stopInfo);
         },
 
         async getDepartures(id) {
             var getDepartures = await axios.get(
                 "https://v5.bvg.transport.rest/stops/" + id + "/departures?duration=10"
             );
-            this.departures = getDepartures.data;
-            this.departures.forEach(element => {
+            vm.departures = getDepartures.data;
+            vm.departures.forEach(element => {
                 element.plannedWhen = new Date(element.when).toLocaleTimeString('de-de');
                 if (element.delay > -1) {
                     element.delay = "+ " + (element.delay / 60).toString();
@@ -44,14 +46,13 @@ const searchresult = Vue.defineComponent({
                     element.delay = (element.delay / 60).toString();
                 }
             });
-            console.log(this.departures);
+            console.log(vm.departures);
         },
 
         saveInLocalstorage(location) {
-            var favoriteLocations = JSON.parse(window.localStorage.getItem("favoriteLocations"));
-            this.favoriteLocations = favoriteLocations;
-            favoriteLocations.push(location);
-            localStorage.setItem("favoriteLocations", JSON.stringify(favoriteLocations));
+            vm.favoriteLocations = JSON.parse(window.localStorage.getItem("favoriteLocations"));
+            vm.favoriteLocations.push(location);
+            localStorage.setItem("favoriteLocations", JSON.stringify(vm.favoriteLocations));
             this.$q.notify({
                 message: 'Die Station ' + location.name + ' wurde zu deinen Favoriten hinzugefügt',
                 icon: 'favorite',
@@ -60,14 +61,14 @@ const searchresult = Vue.defineComponent({
         },
 
         setAsStart(station) {
-            if (this.end != station) {
-                this.start = station;
+            if (vm.end != station) {
+                vm.start = station;
             }
         },
 
         setAsEnd(station) {
-            if (this.start != station) {
-                this.end = station;
+            if (vm.start != station) {
+                vm.end = station;
             }
         },
     },

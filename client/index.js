@@ -22,8 +22,8 @@ const app = Vue.createApp({
             page: "",
             input: "",
             locations: [],
-            start: false,
-            end: false,
+            start: {},
+            end: {},
             detailDialog: false,
             stopInfo: {},
             mapsUrl: "",
@@ -174,6 +174,13 @@ const app = Vue.createApp({
         generateStopLabel(stop, departureOrArrivalDate) {
             return { label: stop.stop.name + "|| Ankunft um " + new Date(departureOrArrivalDate).toLocaleTimeString() + "" };
         },
+
+        setAsStart(station) {
+            if (this.end != station) {
+                this.start = station;
+            }
+        },
+
 
         setAsEnd(station) {
             if (this.start != station) {
