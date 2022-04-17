@@ -35,7 +35,8 @@ const app = Vue.createApp({
             activeTab: "Fahrplan",
             stopsNearMe: '',
             loadingScreen: false,
-            simple: {},
+            simple: [],
+            expanded: [],
             journeyDetails: false,
             favoriteLocations: [],
         }
@@ -172,6 +173,41 @@ const app = Vue.createApp({
 
         showjourneyDetails(journey) {
             this.journeyDetails = true;
+            var children = []
+
+            journey.legs.forEach(element => {
+                var stops = []
+                if (element.stopovers) {
+                    element.stopovers.forEach(stop => {
+                        const stopIsFirstStopInLeg = element.origin.name != stop.stop.name
+                        if (stopIsFirstStopInLeg) {
+                            stops.push(this.generateStopLabel(stop, stop.arrival));
+                        } else {
+                            stops.push(this.generateStopLabel(stop, stop.departure));
+                        }
+                    });
+                } else {
+                    stops.push({ label: "gehen Beine" })
+                }
+                children.push({
+                    label: element.origin.name + " bis <b>" + element.destination.name + "</b>" +
+                        " || " + element.line.name + " " + element.line.productName + " in Richtung " + element.direction +
+                        " || " + element.departure + " - " + element.duration.toString() + "min - " + element.arrival + "",
+                    icon: 'departure_board',
+                    children: stops,
+                });
+            });
+
+            this.simple = [{
+                label: this.start.name + " bis " + this.end.name,
+                children: children,
+            }]
+
+            this.expanded.push(this.simple[0].label, this.simple[0].children[0].label)
+        },
+
+        generateStopLabel(stop, departureOrArrivalDate) {
+            return { label: stop.stop.name + "|| Ankunft um " + new Date(departureOrArrivalDate).toLocaleTimeString() + "" };
         },
 
         setAsStart(station) {
