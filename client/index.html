@@ -65,8 +65,8 @@
                                     <q-btn outline="" color="primary" label="Route berechnen" style="margin: 1%;" @click="getJourney"></q-btn>
                                 </div>
                                 <div>
-                                    <searchresult v-model:locations="locations" v-model:start="start" v-model:end="end" v-model:loadingScreen="loadingScreen" v-model:favoriteLocations="favoriteLocations"></searchresult>
-                                    <favoritelocations v-model:start="start" v-model:end="end"></favoritelocations>
+                                    <searchresult v-model:locations="locations" @updatestart="updateStart" @updateend="updateEnd" @favoritelocations="updateFavoritelocations" v-model:loadingScreen="loadingScreen"></searchresult>
+                                    <favoritelocations @updatestart="updateStart" @updateend="updateEnd" @favoritelocations="updateFavoritelocations" v-model:favoriteLocations="favoriteLocations"></favoritelocations>
                                 </div>
 
                                 <q-dialog v-model="journeyDialog" full-width="">

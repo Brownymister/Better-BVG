@@ -1,8 +1,7 @@
 const favoritelocations = Vue.defineComponent({
     name: 'Favoritelocations',
     props: {
-        start: {},
-        end: {},
+        favoriteLocations: {},
     },
     updated() {
         this.$nextTick(function() {})
@@ -13,50 +12,66 @@ const favoritelocations = Vue.defineComponent({
         }
         this.favoriteLocations = JSON.parse(localStorage.getItem("favoriteLocations"));
 
-        this.$nextTick(function() {
-            console.log(this.favoriteLocations);
-        })
+        this.$nextTick(function() {})
     },
     data() {
         return {
             favoriteLocations: [],
+            start: {},
+            end: {}
         }
     },
     methods: {
         async showDetail(id) {
-            this.detailDialog = true;
+            vm.detailDialog = true;
             var stopInfo = await axios.get(
                 "https://v5.bvg.transport.rest/stops/" + encodeURI(id) + "?linesOfStops=true"
             );
-            this.stopInfo = stopInfo.data;
-            this.mapsUrl = "https://maps.google.com/maps?width=400%&height=400&hl=de&q=" +
-                this.stopInfo.location.latitude + "," + this.stopInfo.location.longitude + "&t=&z=14&ie=UTF8&iwloc=B&output=embed";
-            let keys = Object.keys(this.stopInfo.products).filter(k => this.stopInfo.products[k] == true);
+            vm.stopInfo = stopInfo.data;
+            vm.mapsUrl = "https://maps.google.com/maps?width=400%&height=400&hl=de&q=" +
+                vm.stopInfo.location.latitude + "," + vm.stopInfo.location.longitude + "&t=&z=14&ie=UTF8&iwloc=B&output=embed";
+            let keys = Object.keys(vm.stopInfo.products).filter(k => vm.stopInfo.products[k] == true);
             var offers = keys.toString().replace("subway", "U Bahn").replace("suburban", "S Bahn");
             await this.getDepartures(id);
-            console.log(this.stopInfo);
+        },
+
+        async getDepartures(id) {
+            var getDepartures = await axios.get(
+                "https://v5.bvg.transport.rest/stops/" + id + "/departures?duration=10"
+            );
+            vm.departures = getDepartures.data;
+            vm.departures.forEach(element => {
+                element.plannedWhen = new Date(element.when).toLocaleTimeString('de-de');
+                if (element.delay > -1) {
+                    element.delay = "+ " + (element.delay / 60).toString();
+                } else {
+                    element.delay = (element.delay / 60).toString();
+                }
+            });
         },
 
         setAsStart(station) {
             if (this.end != station) {
                 this.start = station;
+                this.$emit('updatestart', this.start)
             }
         },
 
         setAsEnd(station) {
             if (this.start != station) {
                 this.end = station;
+                this.$emit('updateend', this.end)
             }
         },
 
         removeFormLocalstorage(location) {
-            this.favoriteLocations = JSON.parse(window.localStorage.getItem("favoriteLocations"));
-            const indexOfObject = this.favoriteLocations.findIndex(object => {
+            vm.favoriteLocations = JSON.parse(window.localStorage.getItem("favoriteLocations"));
+            const indexOfObject = vm.favoriteLocations.findIndex(object => {
                 return object.id === location.id;
             });
-            this.favoriteLocations.splice(indexOfObject, 1);
-            console.log(this.favoriteLocations);
-            localStorage.setItem("favoriteLocations", JSON.stringify(this.favoriteLocations));
+            vm.favoriteLocations.splice(indexOfObject, 1);
+            localStorage.setItem("favoriteLocations", JSON.stringify(vm.favoriteLocations));
+            this.$emit("favoritelocations", this.favoriteLocations)
             this.$q.notify({
                 message: 'Die Station ' + location.name + ' wurde aus deinen Favorieten entfernt!',
                 icon: 'delete',

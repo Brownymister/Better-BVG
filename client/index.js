@@ -38,6 +38,7 @@ const app = Vue.createApp({
             simple: [],
             expanded: [],
             journeyDetails: false,
+            favoritelocations: [],
         }
     },
     created() {
@@ -52,7 +53,6 @@ const app = Vue.createApp({
                 );
                 this.locations = location.data;
                 this.loadingScreen = false;
-                console.log(this.locations);
                 this.page = "searchResult";
             }
         },
@@ -61,6 +61,19 @@ const app = Vue.createApp({
             this.start = false;
             this.end = false;
             this.locations = []
+        },
+
+        async showDetail(id) {
+            vm.detailDialog = true;
+            var stopInfo = await axios.get(
+                "https://v5.bvg.transport.rest/stops/" + encodeURI(id) + "?linesOfStops=true"
+            );
+            vm.stopInfo = stopInfo.data;
+            vm.mapsUrl = "https://maps.google.com/maps?width=400%&height=400&hl=de&q=" +
+                vm.stopInfo.location.latitude + "," + vm.stopInfo.location.longitude + "&t=&z=14&ie=UTF8&iwloc=B&output=embed";
+            let keys = Object.keys(vm.stopInfo.products).filter(k => vm.stopInfo.products[k] == true);
+            var offers = keys.toString().replace("subway", "U Bahn").replace("suburban", "S Bahn");
+            await this.getDepartures(id);
         },
 
         async getJourney() {
@@ -101,10 +114,6 @@ const app = Vue.createApp({
                             }
 
                         });
-                        this.simple.label = label = this.start.name + " - " + this.end.name;
-                        this.simple.children = [
-                            journey.legs
-                        ]
                         var lastLeg = false;
                         journey.duration = (journey.arrival - journey.departure) / 1000 / 60;
                         journey.legs.forEach(element => {
@@ -117,8 +126,6 @@ const app = Vue.createApp({
                             lastLeg = element;
                         });
                     });
-                    console.log(this.simple)
-                    console.log(this.journey);
                     this.journeyDialog = true;
                 } else {
                     triggerInvalidRequestAlert();
@@ -212,25 +219,26 @@ const app = Vue.createApp({
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(this.getNearByMe, this.onGeoError);
             } else {
-                console.log("Please check your permissions");
+                console.error("Please check your permissions");
             }
         },
 
         async getNearByMe(position) {
-            console.log(position.coords);
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
             var url = "https://v5.bvg.transport.rest/stops/nearby?latitude=" + latitude + "&longitude=" + longitude + "&linesOfStops=true"
-            console.log(url);
             var getNearByMe = await axios.get(url);
             this.stopsNearMe = getNearByMe.data;
             this.loadingScreen = false;
-            console.log(this.stopsNearMe);
         },
 
         onGeoError(position) {
             console.error("Error code " + position.code + ". " + position.message);
         },
+
+        updateStart(variable) { this.start = variable },
+        updateEnd(variable) { this.end = variable },
+        updateFavoritelocations(variable) { this.Favoritelocations = variable },
     }
 });
 app.use(Quasar);

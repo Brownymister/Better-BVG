@@ -5,15 +5,12 @@ const searchresult = Vue.defineComponent({
         start: {},
         end: {},
         loadingScreen: false,
-        favoriteLocations: [],
     },
     updated() {
         this.$nextTick(function() {})
     },
     async created() {
-        this.$nextTick(function() {
-            console.log(this.start);
-        })
+        this.$nextTick(function() {})
     },
     data() {
         return {}
@@ -30,7 +27,6 @@ const searchresult = Vue.defineComponent({
             let keys = Object.keys(vm.stopInfo.products).filter(k => vm.stopInfo.products[k] == true);
             var offers = keys.toString().replace("subway", "U Bahn").replace("suburban", "S Bahn");
             await this.getDepartures(id);
-            console.log(vm.stopInfo);
         },
 
         async getDepartures(id) {
@@ -46,7 +42,6 @@ const searchresult = Vue.defineComponent({
                     element.delay = (element.delay / 60).toString();
                 }
             });
-            console.log(vm.departures);
         },
 
         saveInLocalstorage(location) {
@@ -61,14 +56,16 @@ const searchresult = Vue.defineComponent({
         },
 
         setAsStart(station) {
-            if (vm.end != station) {
-                vm.start = station;
+            if (this.end != station) {
+                this.start = station;
+                this.$emit('updatestart', this.start)
             }
         },
 
         setAsEnd(station) {
-            if (vm.start != station) {
-                vm.end = station;
+            if (this.start != station) {
+                this.end = station;
+                this.$emit('updateend', this.end)
             }
         },
     },
